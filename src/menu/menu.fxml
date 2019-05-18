@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@../resources/menu.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.MenuController">
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="gameLogo" fitHeight="148.0" fitWidth="1238.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/cai-palavra-logo.png" />
+               </image>
+               <VBox.margin>
+                  <Insets bottom="150.0" />
+               </VBox.margin>
+            </ImageView>
+            <Button fx:id="playButton" mnemonicParsing="false" onAction="#startButtonAction" prefHeight="62.0" prefWidth="197.0" text="JOGAR">
+               <font>
+                  <Font size="28.0" />
+               </font></Button>
+            <Button fx:id="scoreButton" mnemonicParsing="false" onAction="#scoreButtonAction" prefHeight="62.0" prefWidth="197.0" text="PLACAR">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+            <Button fx:id="quitButton" mnemonicParsing="false" onAction="#quitButtonAction" prefHeight="62.0" prefWidth="197.0" text="SAIR">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+   </center>
+   <top>
+      <HBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="1920.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="songToggleButton" fitHeight="67.0" fitWidth="94.0" onMouseClicked="#toggleSong" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="20.0" top="10.0" />
+               </HBox.margin>
+               <image>
+                  <Image url="@../resources/sound-on.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+   </top>
+</BorderPane>
