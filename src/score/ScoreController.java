@@ -1,22 +1,20 @@
 package score;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import utils.ScoreDatabase;
+import utils.models.ScoreRowModel;
+import utils.models.Score;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,18 +24,18 @@ import java.util.ResourceBundle;
 public class ScoreController implements Initializable {
 
     @FXML
-    private TableView<Score> scoreTable;
+    private TableView<ScoreRowModel> scoreTable;
     @FXML
-    private TableColumn<Score, String> nameCol;
+    private TableColumn<ScoreRowModel, String> nameCol;
     @FXML
-    private TableColumn<Score, Integer> scoreCol;
+    private TableColumn<ScoreRowModel, Integer> scoreCol;
 
-    private List<Score> scores = new ArrayList<>();
+    private List<ScoreRowModel> scores = new ArrayList<>();
 
-    private ObservableList<Score> obsScores;
+    private ObservableList<ScoreRowModel> obsScores;
 
     @FXML
-    private ImageView backButton;
+    private Button backButton;
 
     @FXML
     private void backToMenuAction() throws Exception {
@@ -59,11 +57,10 @@ public class ScoreController implements Initializable {
 
     public void loadScores() {
 
-        Score s1 = new Score("Alberto", 480);
-        Score s2 = new Score("João", 320);
 
-        scores.add(s1);
-        scores.add(s2);
+        ScoreList sl = new ScoreList();
+        sl.loadList();
+        sl.getList().forEach((score) -> scores.add(new ScoreRowModel(score.getName(), score.getScore())));
 
         obsScores = FXCollections.observableArrayList(scores);
 
@@ -71,31 +68,6 @@ public class ScoreController implements Initializable {
 
     }
 
-    public static class Score {
-        private final SimpleStringProperty name;
-        private final SimpleIntegerProperty score;
 
-        public Score(String name, Integer score) {
-            this.name = new SimpleStringProperty(name);
-            this.score = new SimpleIntegerProperty(score);
-        }
-
-        public String getName() {
-            return name.get();
-        }
-
-        public int getScore() {
-            return score.get();
-        }
-
-        public void setName(String name) {
-            this.name.set(name);
-        }
-
-        public void setScore(int score) {
-            this.score.set(score);
-        }
-
-    }
 
 }

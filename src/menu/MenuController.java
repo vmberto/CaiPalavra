@@ -21,8 +21,6 @@ import java.util.ResourceBundle;
 
 public class MenuController implements Initializable {
 
-    private static boolean changedScene = false;
-
     @FXML
     private ImageView gameLogo;
 
@@ -31,7 +29,6 @@ public class MenuController implements Initializable {
 
     @FXML
     private Button quitButton;
-
 
     @FXML
     private void startButtonAction(ActionEvent event) throws Exception {
@@ -51,7 +48,6 @@ public class MenuController implements Initializable {
     private void scoreButtonAction(ActionEvent event) throws Exception  {
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../score/score.fxml"));
         Parent game = loader.load();
-        changedScene = true;
 
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 
@@ -69,14 +65,26 @@ public class MenuController implements Initializable {
     @FXML
     private void toggleSong() {
 
-        if (MenuSong.isPlaying()) {
-            MenuSong.stop();
-            Image songOff = new Image("/resources/sound-off.png");
-            this.songToggleButton.setImage(songOff);
-        } else {
-            MenuSong.play();
+        if (MenuSong.isMenuSongDisabled()) {
+            MenuSong.enableSong();
             Image songOn = new Image("/resources/sound-on.png");
             this.songToggleButton.setImage(songOn);
+        } else {
+            MenuSong.disableSong();
+            Image songOff = new Image("/resources/sound-off.png");
+            this.songToggleButton.setImage(songOff);
+        }
+
+    }
+
+    private void initSongToggleState() {
+
+        if (MenuSong.isMenuSongDisabled()) {
+            Image songOn = new Image("/resources/sound-off.png");
+            this.songToggleButton.setImage(songOn);
+        } else {
+            Image songOff = new Image("/resources/sound-on.png");
+            this.songToggleButton.setImage(songOff);
         }
 
     }
@@ -92,12 +100,16 @@ public class MenuController implements Initializable {
         rt.play();
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if (!MenuSong.isPlaying()) {
+        this.initSongToggleState();
+        this.animateLogo();
+
+        if (!MenuSong.isPlaying() && !MenuSong.isMenuSongDisabled()) {
             MenuSong.play();
         }
-        this.animateLogo();
+
     }
 
 }
