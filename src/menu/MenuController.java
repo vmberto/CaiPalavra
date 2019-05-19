@@ -11,17 +11,17 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.media.AudioClip;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import utils.MenuSong;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MenuController implements Initializable {
 
     private static boolean changedScene = false;
-    private AudioClip menuSong = new AudioClip(this.getClass().getResource("/resources/menu-song.mp3").toString());
 
     @FXML
     private ImageView gameLogo;
@@ -29,8 +29,6 @@ public class MenuController implements Initializable {
     @FXML
     private ImageView songToggleButton;
 
-    @FXML
-    private Button scoreButton;
     @FXML
     private Button quitButton;
 
@@ -42,7 +40,7 @@ public class MenuController implements Initializable {
 
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 
-        this.menuSong.stop();
+        MenuSong.stop();
 
         stage.getScene().setRoot(game);
 
@@ -71,12 +69,12 @@ public class MenuController implements Initializable {
     @FXML
     private void toggleSong() {
 
-        if (this.menuSong.isPlaying()) {
-            this.menuSong.stop();
+        if (MenuSong.isPlaying()) {
+            MenuSong.stop();
             Image songOff = new Image("/resources/sound-off.png");
             this.songToggleButton.setImage(songOff);
         } else {
-            this.menuSong.play();
+            MenuSong.play();
             Image songOn = new Image("/resources/sound-on.png");
             this.songToggleButton.setImage(songOn);
         }
@@ -96,8 +94,8 @@ public class MenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if (!changedScene) {
-            this.menuSong.play();
+        if (!MenuSong.isPlaying()) {
+            MenuSong.play();
         }
         this.animateLogo();
     }

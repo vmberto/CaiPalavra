@@ -36,7 +36,6 @@ public class ScoreController implements Initializable {
 
     private ObservableList<Score> obsScores;
 
-
     @FXML
     private ImageView backButton;
 
