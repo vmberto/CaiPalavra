@@ -20,7 +20,8 @@ import java.util.ResourceBundle;
 
 public class MenuController implements Initializable {
 
-    private AudioClip menuSong;
+    private static boolean changedScene = false;
+    private AudioClip menuSong = new AudioClip(this.getClass().getResource("/resources/menu-song.mp3").toString());
 
     @FXML
     private ImageView gameLogo;
@@ -52,6 +53,7 @@ public class MenuController implements Initializable {
     private void scoreButtonAction(ActionEvent event) throws Exception  {
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../score/score.fxml"));
         Parent game = loader.load();
+        changedScene = true;
 
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 
@@ -94,9 +96,10 @@ public class MenuController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.menuSong = new AudioClip(this.getClass().getResource("/resources/menu-song.mp3").toString());
+        if (!changedScene) {
+            this.menuSong.play();
+        }
         this.animateLogo();
-        this.menuSong.play();
     }
 
 }
