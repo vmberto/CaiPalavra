@@ -1,0 +1,5 @@
+.game-pane {
+    -fx-background-image:  url('../resources/in-game-bg.png');
+    -fx-background-position: center;
+    -fx-background-size: cover;
+}

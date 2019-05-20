@@ -47,17 +47,7 @@ public class ScoreController implements Initializable {
 
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        this.nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.scoreCol.setCellValueFactory(new PropertyValueFactory<>("score"));
-        nameCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        this.loadScores();
-    }
-
     public void loadScores() {
-
-
         ScoreList sl = new ScoreList();
         sl.loadList();
         sl.getList().forEach((score) -> scores.add(new ScoreRowModel(score.getName(), score.getScore())));
@@ -68,6 +58,13 @@ public class ScoreController implements Initializable {
 
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        this.nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        this.scoreCol.setCellValueFactory(new PropertyValueFactory<>("score"));
+        nameCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        this.loadScores();
+    }
 
 
 }
