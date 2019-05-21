@@ -12,6 +12,8 @@ public class Word extends Text {
 
     private String wordValue;
     private String mirrorWordValue = "";
+    private int scoreValue = 10;
+
     private int currentWordPosition;
     public boolean isDestroyed;
 
@@ -22,7 +24,7 @@ public class Word extends Text {
         this.currentWordPosition = 0;
 
         setFill(Color.WHITE);
-        setStyle("-fx-font-size: 50;");
+        setStyle("-fx-font-size: 35;");
 
 
     }
@@ -44,6 +46,10 @@ public class Word extends Text {
             this.currentWordPosition = 0;
         }
 
+    }
+
+    public int getScoreValue() {
+        return this.scoreValue;
     }
 
 

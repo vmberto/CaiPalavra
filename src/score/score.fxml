@@ -16,7 +16,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#backToMenuAction" prefHeight="74.0" prefWidth="73.0" styleClass="back-button" textAlignment="CENTER">
+                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#backToMenuAction" onMouseEntered="#mouseHoverSound" prefHeight="74.0" prefWidth="73.0" styleClass="back-button" textAlignment="CENTER">
                      <HBox.margin>
                         <Insets top="5.0" />
                      </HBox.margin>

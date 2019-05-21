@@ -12,6 +12,7 @@ public class MenuSong {
         String songPath = MenuSong.class.getResource("../resources/audio/menu-song.mp3").toString();
         menuSong = new AudioClip(songPath);
         menuSong.setCycleCount(AudioClip.INDEFINITE);
+        menuSong.setVolume(0.6);
         menuSong.play();
     }
     public static void stop() {

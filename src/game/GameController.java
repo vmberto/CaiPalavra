@@ -5,17 +5,22 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
+import utils.AssetsPath;
 
-import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -23,34 +28,28 @@ public class GameController implements Initializable {
 
     @FXML
     private AnchorPane gamePane;
+
     @FXML
     private Text gameCountdown;
-
-    private TextField keyboardInput;
-
-    /**
-     * Game Start Countdown Properties
-     */
-    private int counter;
-    private Timer startCountdown;
     private AudioClip beep;
     private AudioClip beepStart;
-    /**
-     * ------------------------------
-     */
 
-    private Word[] words;
-    Random randomPositionGenerator = new Random();
+
+    private HBox hearts;
+    private HBox score;
+    private List<Word> words = new ArrayList<>();
     AnimationTimer gameTimer;
 
+    private int elementNumber = 1;
+    private int playerScore = GameStatus.getPlayerScore();
+    private Text playerScoreDisplay;
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        gameStartCountdown();
-    }
+    public void initialize(URL url, ResourceBundle rb) { gameStartCountdown(); }
 
     private void gameStartCountdown() {
-        String beepPath = this.getClass().getResource("../resources/audio/beep.mp3").toString();
-        String beepStartPath = this.getClass().getResource("../resources/audio/beep-start.mp3").toString();
+        String beepPath = this.getClass().getResource(AssetsPath.COUNTDOWN_BEEP_SOUND).toString();
+        String beepStartPath = this.getClass().getResource(AssetsPath.COUNTDOWN_BEEP_START_SOUND).toString();
 
         beep = new AudioClip(beepPath);
         beepStart = new AudioClip(beepStartPath);
@@ -64,10 +63,9 @@ public class GameController implements Initializable {
                             if (i.get() == 1) {
                                 beepStart.play();
                                 gamePane.getChildren().remove(gameCountdown);
-                                gamePane.getScene().setOnKeyTyped(e -> sendKeyboardInputs(e.getCharacter().charAt(0)));
 
-                                createGameElements();
-                                createGameLoop();
+                                gameInitialized();
+
                             } else {
                                 beep.play();
                             }
@@ -80,66 +78,170 @@ public class GameController implements Initializable {
         );
         timeline.setCycleCount(3);
         timeline.play();
+    }
+
+    /** Game Engine */
+    private void gameInitialized() {
+        gamePane.getScene().setOnKeyTyped(e -> sendKeyboardInputs(e.getCharacter().charAt(0)));
+        createPlayerLives();
+        createPlayerScore();
+
+        createGameWords(elementNumber);
+        createGameLoop();
+    }
+
+    /**
+     * Creates and Display player's score
+     */
+    private void createPlayerScore() {
+        score = new HBox();
+        Image pointsIcon = new Image(AssetsPath.POINTS_ICON_IMAGE);
+
+        playerScoreDisplay = new Text(Integer.toString(0));
+        playerScoreDisplay.setFill(Color.WHITE);
+        playerScoreDisplay.setStyle("-fx-font-family: 'Segoe UI Semibold'; -fx-font-size: 40;");
+
+        score.setSpacing(10.0);
+
+        score.getChildren().addAll(new ImageView(pointsIcon), playerScoreDisplay);
+
+        score.setLayoutX(50);
+        score.setLayoutY(40);
+
+        score.setAlignment(Pos.CENTER);
+
+        gamePane.getChildren().add(score);
+    }
+
+    /**
+     * Creates and Display player's lives
+     */
+    private void createPlayerLives() {
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+
+        hearts = new HBox();
+        Image heart = new Image(AssetsPath.HEART_CONTAINER_IMAGE);
+
+        hearts.getChildren().addAll(new ImageView(heart), new ImageView(heart), new ImageView(heart));
+
+        hearts.setLayoutX(d.getWidth() - 250);
+        hearts.setLayoutY(40);
+
+        hearts.setAlignment(Pos.CENTER);
+
+        gamePane.getChildren().add(hearts);
 
     }
+
+    /**
+     * Sends keyboard input chars for each words in the screen
+     * @param key
+     */
+    private void sendKeyboardInputs(char key) {
+        for (int i = 0; i < words.size(); i++) {
+            words.get(i).handleKey(key);
+        }
+    }
+
+
+    private void createGameWords(int elementNumber) {
+        Random r = new Random();
+
+        for (int i = 0; i < elementNumber; i++) {
+            Word newWord = new Word(GameStatus.wordsList[r.nextInt(GameStatus.wordsList.length)]);
+            words.add(newWord);
+            setNewElementPosition(newWord);
+            gamePane.getChildren().add(newWord);
+        }
+    }
+
+    /**
+     * Sets a position based on the user's screen
+     * @param word
+     */
+    private void setNewElementPosition(Word word) {
+        Random r = new Random();
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+
+        int minX = (int) d.getWidth() / 4;
+        int maxX = (int) d.getWidth() - ( (int) d.getWidth() / 4);
+        word.setLayoutX(r.nextInt(maxX - minX) + minX);
+
+        word.setLayoutY(0);
+    }
+
 
     private void createGameLoop() {
         gameTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 moveGameElement();
-                checkIfElementAndRelocate();
+
+                checkPlayerScore();
+                checkPlayerLives();
+                checkIfElementHitTheGround();
                 checkDestroyedWords();
             }
         };
         gameTimer.start();
     }
 
-    private void createGameElements() {
-        words = new Word[2];
-        for (int i = 0; i < words.length; i++) {
-            words[i] = new Word(i == 0 ? "palavra" : "jogada");
-            setNewElementPosition(words[i]);
-            gamePane.getChildren().add(words[i]);
-        }
-    }
 
-    private void setNewElementPosition(Word word) {
-        Dimension x = Toolkit.getDefaultToolkit().getScreenSize();
-
-        word.setLayoutX(randomPositionGenerator.nextInt((int) x.getWidth()));
-        word.setLayoutY(0);
-    }
 
     private void moveGameElement() {
-        for (int i = 0; i < words.length; i++) {
-            words[i].setLayoutY(words[i].getLayoutY() + 5);
+        for (int i = 0; i < words.size(); i++) {
+            words.get(i).setLayoutY(words.get(i).getLayoutY() + GameStatus.getFallingSpeed());
 //            words[i].setRotate(words[i].getRotate() + 4);
         }
     }
 
-    private void checkIfElementAndRelocate() {
-        Dimension x = Toolkit.getDefaultToolkit().getScreenSize();
 
-        for (int i = 0; i < words.length; i++) {
-            if (words[i].getLayoutY() > x.getHeight()) {
-                setNewElementPosition(words[i]);
-            }
+
+    /** Game Listeners Start */
+    private void checkPlayerScore() {
+        if (playerScore != GameStatus.getPlayerScore()) {
+            playerScore = GameStatus.getPlayerScore();
+            playerScoreDisplay.setText(Integer.toString(playerScore));
         }
-
     }
 
-    private void sendKeyboardInputs(char key) {
-        for (int i = 0; i < words.length; i++) {
-            words[i].handleKey(key);
+    private void checkPlayerLives() {
+        if (GameStatus.getPlayerLives() < 3 && hearts.getChildren().size() == 3) {
+            hearts.getChildren().remove(hearts.getChildren().size() - 1);
+        } else if (GameStatus.getPlayerLives() < 2 && hearts.getChildren().size() == 2) {
+            hearts.getChildren().remove(hearts.getChildren().size() - 1);
+        } else if (GameStatus.getPlayerLives() < 1 && hearts.getChildren().size() == 1) {
+            gameTimer.stop();
+            gamePane.getChildren().remove(hearts);
         }
     }
 
     private void checkDestroyedWords() {
-        for (int i = 0; i < words.length; i++) {
-            if (words[i].isDestroyed) {
-                gamePane.getChildren().remove(words[i]);
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).isDestroyed) {
+                String songPath = this.getClass().getResource(AssetsPath.POINT_SOUND).toString();
+                new AudioClip(songPath).play();
+                GameStatus.addScore(words.get(i).getScoreValue());
+                gamePane.getChildren().remove(words.get(i));
+                words.remove(words.get(i));
+            }
+
+            if (words.size() <= 0) {
+                elementNumber += 1;
+                createGameWords(elementNumber);
             }
         }
     }
+
+    private void checkIfElementHitTheGround() {
+        Dimension x = Toolkit.getDefaultToolkit().getScreenSize();
+
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).getLayoutY() > x.getHeight()) {
+                GameStatus.subtractOneLife();
+                setNewElementPosition(words.get(i));
+            }
+        }
+    }
+    /** Game Listeners End */
 }

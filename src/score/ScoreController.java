@@ -11,7 +11,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
+import utils.MenuSong;
 import utils.ScoreDatabase;
 import utils.models.ScoreRowModel;
 import utils.models.Score;
@@ -46,6 +48,14 @@ public class ScoreController implements Initializable {
         stage.show();
 
     }
+
+    @FXML
+    private void mouseHoverSound() {
+        String songPath = this.getClass().getResource("../resources/audio/button-hover.mp3").toString();
+        AudioClip mouseHoverSound = new AudioClip(songPath);
+        mouseHoverSound.play();
+    }
+
 
     public void loadScores() {
         ScoreList sl = new ScoreList();

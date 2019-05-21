@@ -11,9 +11,11 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.AudioClip;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import utils.AssetsPath;
 import utils.MenuSong;
 
 import java.net.URL;
@@ -67,24 +69,31 @@ public class MenuController implements Initializable {
 
         if (MenuSong.isMenuSongDisabled()) {
             MenuSong.enableSong();
-            Image songOn = new Image("/resources/sound-on.png");
+            Image songOn = new Image(AssetsPath.SOUND_ON_TOGGLE_IMAGE);
             this.songToggleButton.setImage(songOn);
         } else {
             MenuSong.disableSong();
-            Image songOff = new Image("/resources/sound-off.png");
+            Image songOff = new Image(AssetsPath.SOUND_OFF_TOGGLE_IMAGE);
             this.songToggleButton.setImage(songOff);
         }
 
     }
 
+    @FXML
+    private void mouseHoverSound() {
+        String songPath = this.getClass().getResource(AssetsPath.BUTTON_HOVER_SOUND).toString();
+        AudioClip mouseHoverSound = new AudioClip(songPath);
+        mouseHoverSound.play();
+    }
+
     private void initSongToggleState() {
 
         if (MenuSong.isMenuSongDisabled()) {
-            Image songOn = new Image("/resources/sound-off.png");
-            this.songToggleButton.setImage(songOn);
+            Image soundOff = new Image(AssetsPath.SOUND_OFF_TOGGLE_IMAGE);
+            this.songToggleButton.setImage(soundOff);
         } else {
-            Image songOff = new Image("/resources/sound-on.png");
-            this.songToggleButton.setImage(songOff);
+            Image soundOn = new Image(AssetsPath.SOUND_ON_TOGGLE_IMAGE);
+            this.songToggleButton.setImage(soundOn);
         }
 
     }

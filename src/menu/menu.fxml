@@ -21,16 +21,16 @@
                   <Insets bottom="150.0" />
                </VBox.margin>
             </ImageView>
-            <Button fx:id="playButton" mnemonicParsing="false" onAction="#startButtonAction" prefHeight="71.0" prefWidth="276.0" styleClass="menu-button" text="JOGAR">
+            <Button fx:id="playButton" mnemonicParsing="false" onAction="#startButtonAction" onMouseEntered="#mouseHoverSound" prefHeight="71.0" prefWidth="276.0" styleClass="menu-button" text="JOGAR">
                <font>
                   <Font name="Artifakt Element Bold" size="28.0" />
                </font></Button>
-            <Button fx:id="scoreButton" mnemonicParsing="false" onAction="#scoreButtonAction" prefHeight="71.0" prefWidth="276.0" styleClass="menu-button" text="PLACAR">
+            <Button fx:id="scoreButton" mnemonicParsing="false" onAction="#scoreButtonAction" onMouseEntered="#mouseHoverSound" prefHeight="71.0" prefWidth="276.0" styleClass="menu-button" text="PLACAR">
                <font>
                   <Font size="28.0" />
                </font>
             </Button>
-            <Button fx:id="quitButton" mnemonicParsing="false" onAction="#quitButtonAction" prefHeight="71.0" prefWidth="276.0" styleClass="menu-button" text="SAIR">
+            <Button fx:id="quitButton" mnemonicParsing="false" onAction="#quitButtonAction" onMouseEntered="#mouseHoverSound" prefHeight="71.0" prefWidth="276.0" styleClass="menu-button" text="SAIR">
                <font>
                   <Font size="28.0" />
                </font>
