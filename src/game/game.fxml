@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.stage.Screen?>
 <?import javafx.scene.text.Text?>
 
-
-<BorderPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" styleClass="game-pane" stylesheets="@game.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.GameController">
-   <center>
-      <Text fx:id="gameCountdown" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="3" BorderPane.alignment="CENTER">
+<AnchorPane prefWidth="${screen.visualBounds.width}"
+            prefHeight="${screen.visualBounds.height}" fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"  styleClass="game-pane" stylesheets="@game.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.GameController">
+    <fx:define>
+        <Screen fx:factory="getPrimary" fx:id="screen"/>
+    </fx:define>
+    <children>
+      <Text fx:id="gameCountdown" fill="WHITE" layoutX="1257.0" layoutY="746.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="game-countdown" text="3">
          <font>
             <Font name="Segoe UI Semibold" size="96.0" />
          </font>
       </Text>
-   </center>
-</BorderPane>
+   </children>
+</AnchorPane>

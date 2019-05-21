@@ -8,6 +8,8 @@ import score.ScoreList;
 import utils.ScoreDatabase;
 import utils.models.Score;
 
+import java.awt.*;
+
 
 public class Main extends Application {
 
@@ -17,15 +19,15 @@ public class Main extends Application {
         Parent root = loader.load();
 
         primaryStage.setFullScreen(true);
+
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 //        ------- CHANGE CURSOR -----------
 //        Image image = new Image("resources/cursor.png");
-//        Scene scene = new Scene(root);
+          Scene scene = new Scene(root);
 //        scene.setCursor(new ImageCursor(image));
 
-
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 

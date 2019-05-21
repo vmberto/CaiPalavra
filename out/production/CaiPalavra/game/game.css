@@ -3,3 +3,9 @@
     -fx-background-position: center;
     -fx-background-size: cover;
 }
+
+.game-countdown {
+    -fx-font-family: 'Kongtext';
+    src: url('../resources/Font/kongtext.ttf')
+
+}
