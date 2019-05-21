@@ -9,7 +9,7 @@ public class GameSong {
     private static boolean isGameSongDisabled = false;
 
     public static void play() {
-        String songPath = GameSong.class.getResource("../resources/audio/menu-song.mp3").toString();
+        String songPath = GameSong.class.getResource("../resources/audio/game-song.mp3").toString();
         gameSong = new AudioClip(songPath);
         gameSong.setCycleCount(AudioClip.INDEFINITE);
         gameSong.play();

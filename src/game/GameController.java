@@ -16,6 +16,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import utils.AssetsPath;
+import utils.GameSong;
+import utils.MenuSong;
 
 import java.awt.*;
 import java.net.URL;
@@ -29,7 +31,6 @@ public class GameController implements Initializable {
     @FXML
     private AnchorPane gamePane;
 
-    @FXML
     private Text gameCountdown;
     private AudioClip beep;
     private AudioClip beepStart;
@@ -48,13 +49,22 @@ public class GameController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) { gameStartCountdown(); }
 
     private void gameStartCountdown() {
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         String beepPath = this.getClass().getResource(AssetsPath.COUNTDOWN_BEEP_SOUND).toString();
         String beepStartPath = this.getClass().getResource(AssetsPath.COUNTDOWN_BEEP_START_SOUND).toString();
 
         beep = new AudioClip(beepPath);
         beepStart = new AudioClip(beepStartPath);
 
+
         final IntegerProperty i = new SimpleIntegerProperty(3);
+        gameCountdown = new Text(Integer.toString(i.get()));
+        gameCountdown.setFill(Color.WHITE);
+        gameCountdown.setStyle("-fx-font-family: 'Segoe UI Semibold'; -fx-font-size: 70;");
+        gameCountdown.setLayoutX(d.getWidth() / 2);
+        gameCountdown.setLayoutY(d.getHeight() / 2);
+        gamePane.getChildren().add(gameCountdown);
+
         beep.play();
         Timeline timeline = new Timeline(
                 new KeyFrame(
@@ -64,6 +74,7 @@ public class GameController implements Initializable {
                                 beepStart.play();
                                 gamePane.getChildren().remove(gameCountdown);
 
+                                GameSong.play();
                                 gameInitialized();
 
                             } else {
@@ -224,10 +235,11 @@ public class GameController implements Initializable {
                 GameStatus.addScore(words.get(i).getScoreValue());
                 gamePane.getChildren().remove(words.get(i));
                 words.remove(words.get(i));
+                /** @todo ver possibilidade de resetar todas as palavras após uma ser destruída, para evitar que a ultima letra de uma palavra seja a primeira de outra e causar confusão*/
             }
 
             if (words.size() <= 0) {
-                elementNumber += 1;
+                if (elementNumber < 2) elementNumber += 1;
                 createGameWords(elementNumber);
             }
         }

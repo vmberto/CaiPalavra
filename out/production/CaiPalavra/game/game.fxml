@@ -11,10 +11,6 @@
         <Screen fx:factory="getPrimary" fx:id="screen"/>
     </fx:define>
     <children>
-      <Text fx:id="gameCountdown" fill="WHITE" layoutX="1257.0" layoutY="746.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="game-countdown" text="3">
-         <font>
-            <Font name="Segoe UI Semibold" size="96.0" />
-         </font>
-      </Text>
+
    </children>
 </AnchorPane>
