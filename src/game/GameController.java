@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
@@ -21,15 +22,16 @@ import utils.MenuSong;
 
 import java.awt.*;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
-import java.util.ResourceBundle;
 
 public class GameController implements Initializable {
 
     @FXML
     private AnchorPane gamePane;
+
+    static Dimension dimensions = Toolkit.getDefaultToolkit().getScreenSize();
+
 
     private Text gameCountdown;
     private AudioClip beep;
@@ -46,10 +48,13 @@ public class GameController implements Initializable {
     private Text playerScoreDisplay;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) { gameStartCountdown(); }
+    public void initialize(URL url, ResourceBundle rb) {
+        gameStartCountdown();
+    }
 
     private void gameStartCountdown() {
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        gamePane.setCursor(Cursor.NONE);
+
         String beepPath = this.getClass().getResource(AssetsPath.COUNTDOWN_BEEP_SOUND).toString();
         String beepStartPath = this.getClass().getResource(AssetsPath.COUNTDOWN_BEEP_START_SOUND).toString();
 
@@ -61,8 +66,8 @@ public class GameController implements Initializable {
         gameCountdown = new Text(Integer.toString(i.get()));
         gameCountdown.setFill(Color.WHITE);
         gameCountdown.setStyle("-fx-font-family: 'Segoe UI Semibold'; -fx-font-size: 70;");
-        gameCountdown.setLayoutX(d.getWidth() / 2);
-        gameCountdown.setLayoutY(d.getHeight() / 2);
+        gameCountdown.setLayoutX(dimensions.getWidth() / 2);
+        gameCountdown.setLayoutY(dimensions.getHeight() / 2);
         gamePane.getChildren().add(gameCountdown);
 
         beep.play();
@@ -91,12 +96,15 @@ public class GameController implements Initializable {
         timeline.play();
     }
 
-    /** Game Engine */
+    /**
+     * Game Engine
+     */
     private void gameInitialized() {
         gamePane.getScene().setOnKeyTyped(e -> sendKeyboardInputs(e.getCharacter().charAt(0)));
         createPlayerLives();
         createPlayerScore();
 
+        createWordSpawn();
         createGameWords(elementNumber);
         createGameLoop();
     }
@@ -128,14 +136,12 @@ public class GameController implements Initializable {
      * Creates and Display player's lives
      */
     private void createPlayerLives() {
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-
         hearts = new HBox();
         Image heart = new Image(AssetsPath.HEART_CONTAINER_IMAGE);
 
         hearts.getChildren().addAll(new ImageView(heart), new ImageView(heart), new ImageView(heart));
 
-        hearts.setLayoutX(d.getWidth() - 250);
+        hearts.setLayoutX(dimensions.getWidth() - 250);
         hearts.setLayoutY(40);
 
         hearts.setAlignment(Pos.CENTER);
@@ -146,6 +152,7 @@ public class GameController implements Initializable {
 
     /**
      * Sends keyboard input chars for each words in the screen
+     *
      * @param key
      */
     private void sendKeyboardInputs(char key) {
@@ -155,30 +162,43 @@ public class GameController implements Initializable {
     }
 
 
-    private void createGameWords(int elementNumber) {
+    private void createGameWords(int wordsNumber) {
         Random r = new Random();
 
-        for (int i = 0; i < elementNumber; i++) {
-            Word newWord = new Word(GameStatus.wordsList[r.nextInt(GameStatus.wordsList.length)]);
+        for (int i = 0; i < wordsNumber; i++) {
+            Word newWord = new Word(GameStatus.wordsList[r.nextInt(GameStatus.wordsList.length)], DificultyManager.isWordRotating());
             words.add(newWord);
-            setNewElementPosition(newWord);
+            setNewElementPosition(newWord, i);
             gamePane.getChildren().add(newWord);
         }
     }
 
+    private void createWordSpawn() {
+        Timeline spawn = new Timeline(
+                new KeyFrame(
+                        Duration.seconds(6.2),
+                        event -> {
+                            createGameWords(DificultyManager.getWordsSpawnNumber());
+                        }
+                )
+        );
+        spawn.setCycleCount(Animation.INDEFINITE);
+        spawn.play();
+    }
+
     /**
      * Sets a position based on the user's screen
+     *
      * @param word
      */
-    private void setNewElementPosition(Word word) {
+    private void setNewElementPosition(Word word, int i) {
         Random r = new Random();
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 
-        int minX = (int) d.getWidth() / 4;
-        int maxX = (int) d.getWidth() - ( (int) d.getWidth() / 4);
+        int minX = (int) dimensions.getWidth() / 4;
+        int maxX = (int) dimensions.getWidth() - ((int) dimensions.getWidth() / 4);
         word.setLayoutX(r.nextInt(maxX - minX) + minX);
 
-        word.setLayoutY(0);
+        word.setLayoutY(-(i * 90));
     }
 
 
@@ -187,33 +207,39 @@ public class GameController implements Initializable {
             @Override
             public void handle(long now) {
                 moveGameElement();
-
-                checkPlayerScore();
-                checkPlayerLives();
-                checkIfElementHitTheGround();
-                checkDestroyedWords();
+                if (!GameStatus.isGameOver()) checkIfElementHitTheGround();
+                if (!GameStatus.isGameOver()) checkPlayerScore();
+                if (!GameStatus.isGameOver()) checkPlayerLives();
+                if (!GameStatus.isGameOver()) checkDestroyedWords();
             }
         };
         gameTimer.start();
     }
 
 
-
     private void moveGameElement() {
-        for (int i = 0; i < words.size(); i++) {
-            words.get(i).setLayoutY(words.get(i).getLayoutY() + GameStatus.getFallingSpeed());
-//            words[i].setRotate(words[i].getRotate() + 4);
-        }
+        words.forEach(word -> {
+            word.setLayoutY(word.getLayoutY() + DificultyManager.getFallingSpeed() + word.getFallingSpeedBonus());
+            if (word.isRotating()) word.setRotate(word.getRotate() + 4);
+        });
     }
 
 
-
-    /** Game Listeners Start */
+    /**
+     * Game Listeners Start
+     */
     private void checkPlayerScore() {
         if (playerScore != GameStatus.getPlayerScore()) {
             playerScore = GameStatus.getPlayerScore();
             playerScoreDisplay.setText(Integer.toString(playerScore));
         }
+
+        if (GameStatus.getPlayerScore() >= DificultyManager.getNextScoreFlag()) {
+            DificultyManager.increaseFallingSpeed(0.23);
+            DificultyManager.setNextScoreFlag();
+        }
+
+
     }
 
     private void checkPlayerLives() {
@@ -222,38 +248,85 @@ public class GameController implements Initializable {
         } else if (GameStatus.getPlayerLives() < 2 && hearts.getChildren().size() == 2) {
             hearts.getChildren().remove(hearts.getChildren().size() - 1);
         } else if (GameStatus.getPlayerLives() < 1 && hearts.getChildren().size() == 1) {
-            gameTimer.stop();
+            GameStatus.setGameOver();
+            gameOverHandler();
             gamePane.getChildren().remove(hearts);
         }
     }
 
     private void checkDestroyedWords() {
-        for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).isDestroyed) {
+        words.forEach(word -> {
+
+            if (word.isDestroyed) {
+
                 String songPath = this.getClass().getResource(AssetsPath.POINT_SOUND).toString();
                 new AudioClip(songPath).play();
-                GameStatus.addScore(words.get(i).getScoreValue());
-                gamePane.getChildren().remove(words.get(i));
-                words.remove(words.get(i));
-                /** @todo ver possibilidade de resetar todas as palavras após uma ser destruída, para evitar que a ultima letra de uma palavra seja a primeira de outra e causar confusão*/
+                GameStatus.addScore(word.getScoreValue());
+
+                gamePane.getChildren().remove(word);
+                words.remove(word);
             }
 
             if (words.size() <= 0) {
                 if (elementNumber < 2) elementNumber += 1;
                 createGameWords(elementNumber);
             }
-        }
+        });
     }
 
+    /***
+     * If word hits the ground, the player losts one life and the word return to the top
+     * with a normal form and another TextWord
+     */
     private void checkIfElementHitTheGround() {
         Dimension x = Toolkit.getDefaultToolkit().getScreenSize();
 
-        for (int i = 0; i < words.size(); i++) {
-            if (words.get(i).getLayoutY() > x.getHeight()) {
+        words.forEach(word -> {
+            if (word.getLayoutY() > x.getHeight()) {
                 GameStatus.subtractOneLife();
-                setNewElementPosition(words.get(i));
+
+                MenuSong.playSound(AssetsPath.WORD_DAMAGE_EXPLOSION_SOUND);
+
+                Image explosion = new Image("/resources/explosion.gif");
+                ImageView explosionGif = new ImageView(explosion);
+                explosionGif.setLayoutX(word.getLayoutX());
+                explosionGif.setLayoutY(word.getLayoutY() - 75);
+                PauseTransition pause = new PauseTransition(Duration.seconds(.9));
+                pause.setOnFinished(event -> gamePane.getChildren().remove(explosionGif));
+                gamePane.getChildren().add(explosionGif);
+                pause.play();
+
+
+                word.setNormalPattern();
+                setNewElementPosition(word, 0);
             }
-        }
+        });
+
     }
-    /** Game Listeners End */
+
+    /**
+     * Game Listeners End
+     */
+
+    public void gameOverHandler() {
+        gamePane.getScene().setOnKeyTyped(null);
+        GameSong.stop();
+        Image gameOverImage = new Image("/resources/game-over-message.png");
+        ImageView gameOver = new ImageView(gameOverImage);
+
+        gameOver.setLayoutY(dimensions.getHeight() + 250);
+        gameOver.setLayoutX(dimensions.getWidth() / 2 - 310);
+
+        gamePane.getChildren().add(gameOver);
+
+        AnimationTimer x = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                gameOver.setLayoutY(gameOver.getLayoutY() - 4.9);
+                if (gameOver.getLayoutY() <= (dimensions.getHeight() / 2) - 250) stop();
+            }
+        };
+        x.start();
+    }
+
 }

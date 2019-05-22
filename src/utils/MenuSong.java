@@ -35,6 +35,14 @@ public class MenuSong {
 
     public static boolean isMenuSongDisabled() { return isMenuSongDisabled; }
 
+    public static void playSound(String soundPath) {
+        if (!isMenuSongDisabled()) {
+            String sp = MenuSong.class.getResource(".." + soundPath).toString();
+            new AudioClip(sp).play();
+        }
+
+    }
+
 
 
 }

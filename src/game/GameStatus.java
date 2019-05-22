@@ -6,7 +6,7 @@ public class GameStatus {
 
     private static int playerLives = 3;
 
-    private static int fallingSpeed = 4;
+    private static boolean gameOver = false;
 
     public static String[] wordsList = {
             "abrigo","agujeta","calcetines","calzoncillo","camisa","camiseta","corbata","gorra","algodon","blusa","bolsa","cierre","cinturon","falda","guantes","medias",
@@ -49,14 +49,6 @@ public class GameStatus {
         return playerScore;
     }
 
-    public static int getFallingSpeed() {
-        return fallingSpeed;
-    }
-
-    public static void increaseFallingSpeed() {
-        fallingSpeed += 4;
-    }
-
     public static void subtractOneLife() {
         playerLives -= 1;
     }
@@ -65,4 +57,11 @@ public class GameStatus {
         return playerLives;
     }
 
+    public static boolean isGameOver() {
+        return gameOver;
+    }
+
+    public static void setGameOver() {
+        gameOver = true;
+    }
 }

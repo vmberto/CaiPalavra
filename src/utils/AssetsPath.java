@@ -8,6 +8,8 @@ public class AssetsPath {
 
     public static final String POINT_SOUND = "/resources/audio/point.mp3";
 
+    public static final String WORD_DAMAGE_EXPLOSION_SOUND = "/resources/audio/explosion.mp3";
+
     public static final String COUNTDOWN_BEEP_SOUND = "/resources/audio/beep.mp3";
 
     public static final String COUNTDOWN_BEEP_START_SOUND = "/resources/audio/beep-start.mp3";
