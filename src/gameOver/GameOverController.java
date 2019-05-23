@@ -125,13 +125,14 @@ public class GameOverController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
 
-        if (GameStatus.getPlayerScore() > scoreRepository.getList().get(0).getScore()) {
-
+        if (scoreRepository.getList().size() <= 0 || GameStatus.getPlayerScore() > scoreRepository.getList().get(0).getScore()) {
             gameOverPane.getStyleClass().add("new-record");
             SoundHandler.playSound(AssetsPath.NEW_RECORD);
             newRecordTitle.setVisible(true);
-            newRecordSubtitle.setText("Você superou " + scoreRepository.getList().get(0).getName());
-            newRecordSubtitle.setVisible(true);
+            if (scoreRepository.getList().size() > 0) {
+                newRecordSubtitle.setText("Você superou " + scoreRepository.getList().get(0).getName());
+                newRecordSubtitle.setVisible(true);
+            }
 
         }
 
