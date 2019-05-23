@@ -1,0 +1,26 @@
+.game-over-pane {
+   -fx-background-color: black;
+}
+
+.new-record {
+	-fx-background-image: url('../resources/sprites/6ob.gif');
+    -fx-background-size: contain;
+}
+
+.new-record-title {
+    -fx-color: #ffc700;
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-font-size: 36px;
+}
+
+.save-score-button, .skip-button {
+	-fx-background-color: transparent;
+	-fx-background-image: url('../resources/sprites/game-over-button.png');
+	-fx-background-size: contain;
+	-fx-cursor: hand;
+}
+
+
+.save-score-button:hover, .skip-button:hover {
+	-fx-background-image: url('../resources/sprites/game-over-button-hover.png');
+}

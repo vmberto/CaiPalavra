@@ -4,18 +4,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
-import score.ScoreList;
-import utils.ScoreDatabase;
-import utils.models.Score;
-
-import java.awt.*;
+import score.ScoreRepository;
+import utils.models.PlayerScore;
 
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("menu/menu.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("gameOver/GameOverView.fxml"));
         Parent root = loader.load();
 
         primaryStage.setFullScreen(true);
@@ -33,26 +30,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-
-    /** WRITE ON LIST METHOD */
-    public void writeList() {
-
-        Score s1 = new Score("Alberto", 480);
-        Score s2 = new Score("Flavio", 1234);
-
-
-        ScoreList sl = new ScoreList();
-
-        sl.loadList();
-
-        sl.add(s1);
-        sl.add(s2);
-
-        sl.writeList();
-
-
     }
 
 }

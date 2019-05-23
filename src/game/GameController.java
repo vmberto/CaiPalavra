@@ -4,21 +4,21 @@ import javafx.animation.*;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.TextField;
+import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.AssetsPath;
-import utils.GameSong;
-import utils.MenuSong;
+import utils.SoundHandler;
 
 import java.awt.*;
 import java.net.URL;
@@ -34,14 +34,16 @@ public class GameController implements Initializable {
 
 
     private Text gameCountdown;
-    private AudioClip beep;
-    private AudioClip beepStart;
 
 
+    // Components
     private HBox hearts;
     private HBox score;
     private List<Word> words = new ArrayList<>();
+
+    // Timers
     AnimationTimer gameTimer;
+    Timeline gameSpawn;
 
     private int elementNumber = 1;
     private int playerScore = GameStatus.getPlayerScore();
@@ -55,13 +57,6 @@ public class GameController implements Initializable {
     private void gameStartCountdown() {
         gamePane.setCursor(Cursor.NONE);
 
-        String beepPath = this.getClass().getResource(AssetsPath.COUNTDOWN_BEEP_SOUND).toString();
-        String beepStartPath = this.getClass().getResource(AssetsPath.COUNTDOWN_BEEP_START_SOUND).toString();
-
-        beep = new AudioClip(beepPath);
-        beepStart = new AudioClip(beepStartPath);
-
-
         final IntegerProperty i = new SimpleIntegerProperty(3);
         gameCountdown = new Text(Integer.toString(i.get()));
         gameCountdown.setFill(Color.WHITE);
@@ -70,20 +65,20 @@ public class GameController implements Initializable {
         gameCountdown.setLayoutY(dimensions.getHeight() / 2);
         gamePane.getChildren().add(gameCountdown);
 
-        beep.play();
+        SoundHandler.playSound(AssetsPath.COUNTDOWN_BEEP_SOUND);
         Timeline timeline = new Timeline(
                 new KeyFrame(
                         Duration.seconds(1),
                         event -> {
                             if (i.get() == 1) {
-                                beepStart.play();
+                                SoundHandler.playSound(AssetsPath.COUNTDOWN_BEEP_START_SOUND);
                                 gamePane.getChildren().remove(gameCountdown);
 
-                                GameSong.play();
+                                SoundHandler.playGameSong();
                                 gameInitialized();
 
                             } else {
-                                beep.play();
+                                SoundHandler.playSound(AssetsPath.COUNTDOWN_BEEP_SOUND);
                             }
 
                             i.set(i.get() - 1);
@@ -174,7 +169,7 @@ public class GameController implements Initializable {
     }
 
     private void createWordSpawn() {
-        Timeline spawn = new Timeline(
+        gameSpawn = new Timeline(
                 new KeyFrame(
                         Duration.seconds(6.2),
                         event -> {
@@ -182,8 +177,8 @@ public class GameController implements Initializable {
                         }
                 )
         );
-        spawn.setCycleCount(Animation.INDEFINITE);
-        spawn.play();
+        gameSpawn.setCycleCount(Animation.INDEFINITE);
+        gameSpawn.play();
     }
 
     /**
@@ -234,9 +229,9 @@ public class GameController implements Initializable {
             playerScoreDisplay.setText(Integer.toString(playerScore));
         }
 
-        if (GameStatus.getPlayerScore() >= DificultyManager.getNextScoreFlag()) {
+        if (GameStatus.getPlayerScore() >= GameStatus.getNextScoreFlag()) {
             DificultyManager.increaseFallingSpeed(0.23);
-            DificultyManager.setNextScoreFlag();
+            GameStatus.setNextScoreFlag();
         }
 
 
@@ -255,23 +250,22 @@ public class GameController implements Initializable {
     }
 
     private void checkDestroyedWords() {
-        words.forEach(word -> {
+        for (int i = 0; i < words.size(); i++) {
+            if (words.get(i).isDestroyed) {
 
-            if (word.isDestroyed) {
+                SoundHandler.playSound(AssetsPath.POINT_SOUND);
 
-                String songPath = this.getClass().getResource(AssetsPath.POINT_SOUND).toString();
-                new AudioClip(songPath).play();
-                GameStatus.addScore(word.getScoreValue());
+                GameStatus.addScore(words.get(i).getScoreValue());
 
-                gamePane.getChildren().remove(word);
-                words.remove(word);
+                gamePane.getChildren().remove(words.get(i));
+                words.remove(words.get(i));
             }
 
             if (words.size() <= 0) {
                 if (elementNumber < 2) elementNumber += 1;
                 createGameWords(elementNumber);
             }
-        });
+        }
     }
 
     /***
@@ -283,15 +277,18 @@ public class GameController implements Initializable {
 
         words.forEach(word -> {
             if (word.getLayoutY() > x.getHeight()) {
+
                 GameStatus.subtractOneLife();
 
-                MenuSong.playSound(AssetsPath.WORD_DAMAGE_EXPLOSION_SOUND);
+                SoundHandler.playSound(AssetsPath.WORD_DAMAGE_EXPLOSION_SOUND);
 
-                Image explosion = new Image("/resources/explosion.gif");
+                Image explosion = new Image(AssetsPath.WORD_DAMAGE_EXPLOSION_ANIMATION);
                 ImageView explosionGif = new ImageView(explosion);
                 explosionGif.setLayoutX(word.getLayoutX());
-                explosionGif.setLayoutY(word.getLayoutY() - 75);
-                PauseTransition pause = new PauseTransition(Duration.seconds(.9));
+                explosionGif.setLayoutY(word.getLayoutY() - 155);
+                explosionGif.setScaleX(2.2);
+                explosionGif.setScaleY(2.2);
+                PauseTransition pause = new PauseTransition(Duration.seconds(1.01));
                 pause.setOnFinished(event -> gamePane.getChildren().remove(explosionGif));
                 gamePane.getChildren().add(explosionGif);
                 pause.play();
@@ -310,23 +307,41 @@ public class GameController implements Initializable {
 
     public void gameOverHandler() {
         gamePane.getScene().setOnKeyTyped(null);
-        GameSong.stop();
-        Image gameOverImage = new Image("/resources/game-over-message.png");
+        SoundHandler.stopGameSong();
+        SoundHandler.playSound(AssetsPath.GAME_OVER_SONG);
+        Image gameOverImage = new Image(AssetsPath.GAME_OVER_IMAGE);
         ImageView gameOver = new ImageView(gameOverImage);
-
         gameOver.setLayoutY(dimensions.getHeight() + 250);
         gameOver.setLayoutX(dimensions.getWidth() / 2 - 310);
-
         gamePane.getChildren().add(gameOver);
-
-        AnimationTimer x = new AnimationTimer() {
+        AnimationTimer gameOverShowup = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 gameOver.setLayoutY(gameOver.getLayoutY() - 4.9);
                 if (gameOver.getLayoutY() <= (dimensions.getHeight() / 2) - 250) stop();
             }
         };
-        x.start();
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(10));
+        pause.setOnFinished(event -> {
+            try {
+                gameTimer.stop();
+                gameSpawn.stop();
+                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../gameOver/GameOverView.fxml"));
+                Parent gameOverScreen = loader.load();
+                Stage stage = (Stage) gamePane.getScene().getWindow();
+                stage.getScene().setRoot(gameOverScreen);
+                stage.show();
+            } catch(Exception e) {
+                System.out.println(e);
+                return;
+            }
+
+
+        });
+
+        pause.play();
+        gameOverShowup.start();
     }
 
 }

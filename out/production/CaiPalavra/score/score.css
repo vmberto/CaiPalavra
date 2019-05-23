@@ -1,6 +1,6 @@
 .back-button {
     -fx-background-color: transparent;
-    -fx-background-image: url('../resources/left-arrow-hovered.png');
+    -fx-background-image: url('../resources/sprites/left-arrow-hovered.png');
 	-fx-background-size: contain;
     -fx-font-family: "Segoe UI Semibold";
     -fx-cursor: hand;
@@ -9,5 +9,5 @@
 
 
 .back-button:hover {
-	-fx-background-image: url('../resources/left-arrow.png');
+	-fx-background-image: url('../resources/sprites/left-arrow.png');
 }

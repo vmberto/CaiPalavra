@@ -16,7 +16,7 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.AssetsPath;
-import utils.MenuSong;
+import utils.SoundHandler;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -39,7 +39,7 @@ public class MenuController implements Initializable {
 
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 
-        MenuSong.stop();
+        SoundHandler.stop();
 
         stage.getScene().setRoot(game);
 
@@ -49,11 +49,11 @@ public class MenuController implements Initializable {
     @FXML
     private void scoreButtonAction(ActionEvent event) throws Exception  {
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../score/score.fxml"));
-        Parent game = loader.load();
+        Parent scoreView = loader.load();
 
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
 
-        stage.getScene().setRoot(game);
+        stage.getScene().setRoot(scoreView);
 
         stage.show();
     }
@@ -67,12 +67,12 @@ public class MenuController implements Initializable {
     @FXML
     private void toggleSong() {
 
-        if (MenuSong.isMenuSongDisabled()) {
-            MenuSong.enableSong();
+        if (SoundHandler.isGameSoundDisabled()) {
+            SoundHandler.enableSound();
             Image songOn = new Image(AssetsPath.SOUND_ON_TOGGLE_IMAGE);
             this.songToggleButton.setImage(songOn);
         } else {
-            MenuSong.disableSong();
+            SoundHandler.disableSound();
             Image songOff = new Image(AssetsPath.SOUND_OFF_TOGGLE_IMAGE);
             this.songToggleButton.setImage(songOff);
         }
@@ -81,14 +81,12 @@ public class MenuController implements Initializable {
 
     @FXML
     private void mouseHoverSound() {
-        String songPath = this.getClass().getResource(AssetsPath.BUTTON_HOVER_SOUND).toString();
-        AudioClip mouseHoverSound = new AudioClip(songPath);
-        mouseHoverSound.play();
+        SoundHandler.playSound(AssetsPath.BUTTON_HOVER_SOUND);
     }
 
     private void initSongToggleState() {
 
-        if (MenuSong.isMenuSongDisabled()) {
+        if (SoundHandler.isGameSoundDisabled()) {
             Image soundOff = new Image(AssetsPath.SOUND_OFF_TOGGLE_IMAGE);
             this.songToggleButton.setImage(soundOff);
         } else {
@@ -115,8 +113,8 @@ public class MenuController implements Initializable {
         this.initSongToggleState();
         this.animateLogo();
 
-        if (!MenuSong.isPlaying() && !MenuSong.isMenuSongDisabled()) {
-            MenuSong.play();
+        if (!SoundHandler.isPlaying() && !SoundHandler.isGameSoundDisabled()) {
+            SoundHandler.playMenuSong();
         }
 
     }

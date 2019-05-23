@@ -23,7 +23,7 @@
                   </Button>
                   <ImageView fitHeight="102.0" fitWidth="601.0" onKeyTyped="#backToMenuAction" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../resources/placar.png" />
+                        <Image url="@../resources/images/placar.png" />
                      </image>
                      <HBox.margin>
                         <Insets left="35.0" />
@@ -36,7 +36,8 @@
             </HBox>
             <TableView fx:id="scoreTable" fixedCellSize="50.0" minWidth="-Infinity" prefHeight="524.0" prefWidth="920.0">
               <columns>
-                <TableColumn fx:id="nameCol" minWidth="500.0" prefWidth="346.0" text="Nome" />
+                  <TableColumn fx:id="positionCol" prefWidth="248.0" style="-fx-text-align: center;" text="Posição" />
+                <TableColumn fx:id="nameCol" minWidth="327.199951171875" prefWidth="327.199951171875" text="Nome" />
                 <TableColumn fx:id="scoreCol" prefWidth="374.0" text="Pontuação" />
               </columns>
             </TableView>

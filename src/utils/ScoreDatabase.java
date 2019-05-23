@@ -1,6 +1,6 @@
 package utils;
 
-import utils.models.Score;
+import utils.models.PlayerScore;
 
 import java.io.EOFException;
 import java.io.File;
@@ -67,21 +67,21 @@ public class ScoreDatabase {
         }
     }
 
-    public void gravarDados (Score score) {
+    public void gravarDados (PlayerScore playerScore) {
         try {
-            output.writeObject(score);
+            output.writeObject(playerScore);
         }
         catch (IOException ioException){
             System.exit(1);
         }
     }
 
-    public Score lerDados (){
-        Score score;
+    public PlayerScore lerDados (){
+        PlayerScore playerScore;
 
         try {
-            score = (Score) input.readObject();
-            return score;
+            playerScore = (PlayerScore) input.readObject();
+            return playerScore;
         }
         catch (EOFException endOfFileException) {
             return null;

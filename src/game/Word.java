@@ -1,11 +1,9 @@
 package game;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import utils.AssetsPath;
+import utils.SoundHandler;
 
 import java.util.Random;
 
@@ -49,6 +47,7 @@ public class Word extends Text {
             this.currentWordPosition += 1;
             this.mirrorWordValue = this.mirrorWordValue + k;
             setText(this.wordText.substring(this.currentWordPosition));
+            SoundHandler.playSound(AssetsPath.TYPING_SOUND);
         } else {
             this.mirrorWordValue = "";
             this.currentWordPosition = 0;
@@ -80,6 +79,7 @@ public class Word extends Text {
 
         setRotate(0.0);
 
+        this.currentWordPosition = 0;
         this.fallingSpeedBonus = 0;
         this.isRotating = false;
         this.scoreValue = 10;

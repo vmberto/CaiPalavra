@@ -6,9 +6,6 @@ public class DificultyManager {
 
     private static double fallingSpeed = 3.8;
 
-    private static int nextScoreFlag = 100;
-    private static int flagsReached = 0;
-
     public static double getFallingSpeed() {
         return fallingSpeed;
     }
@@ -53,13 +50,8 @@ public class DificultyManager {
         return spawnNumber;
     }
 
-    public static int getNextScoreFlag() {
-        return nextScoreFlag;
-    }
-
-    public static void setNextScoreFlag() {
-        nextScoreFlag += 100;
-        flagsReached += 1;
+    public static void reset() {
+        fallingSpeed = 3.8;
     }
 
 }

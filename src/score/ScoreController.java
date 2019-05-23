@@ -11,12 +11,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
-import utils.MenuSong;
-import utils.ScoreDatabase;
+import utils.AssetsPath;
+import utils.SoundHandler;
 import utils.models.ScoreRowModel;
-import utils.models.Score;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,6 +25,8 @@ public class ScoreController implements Initializable {
 
     @FXML
     private TableView<ScoreRowModel> scoreTable;
+    @FXML
+    private TableColumn<ScoreRowModel, String> positionCol;
     @FXML
     private TableColumn<ScoreRowModel, String> nameCol;
     @FXML
@@ -42,25 +42,23 @@ public class ScoreController implements Initializable {
     @FXML
     private void backToMenuAction() throws Exception {
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../menu/menu.fxml"));
-        Parent game = loader.load();
+        Parent menuView = loader.load();
         Stage stage = (Stage) backButton.getScene().getWindow();
-        stage.getScene().setRoot(game);
+        stage.getScene().setRoot(menuView);
         stage.show();
 
     }
 
     @FXML
     private void mouseHoverSound() {
-        String songPath = this.getClass().getResource("../resources/audio/button-hover.mp3").toString();
-        AudioClip mouseHoverSound = new AudioClip(songPath);
-        mouseHoverSound.play();
+        SoundHandler.playSound(AssetsPath.BUTTON_HOVER_SOUND);
     }
 
 
     public void loadScores() {
-        ScoreList sl = new ScoreList();
-        sl.loadList();
-        sl.getList().forEach((score) -> scores.add(new ScoreRowModel(score.getName(), score.getScore())));
+        ScoreRepository scoreRepository = new ScoreRepository();
+
+        scoreRepository.getList().forEach((score) -> scores.add(new ScoreRowModel(score.getName(), score.getScore(), scoreRepository.getList().indexOf(score) + 1)));
 
         obsScores = FXCollections.observableArrayList(scores);
 
@@ -72,6 +70,7 @@ public class ScoreController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         this.nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         this.scoreCol.setCellValueFactory(new PropertyValueFactory<>("score"));
+        this.positionCol.setCellValueFactory(new PropertyValueFactory<>("position"));
         nameCol.setCellFactory(TextFieldTableCell.forTableColumn());
         this.loadScores();
     }

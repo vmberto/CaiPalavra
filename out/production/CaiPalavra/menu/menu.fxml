@@ -15,7 +15,7 @@
          <children>
             <ImageView fx:id="gameLogo" fitHeight="148.0" fitWidth="1238.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../resources/cai-palavra-logo.png" />
+                  <Image url="@../resources/images/cai-palavra-logo.png" />
                </image>
                <VBox.margin>
                   <Insets bottom="150.0" />
