@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefWidth="${screen.visualBounds.width}"
-            prefHeight="${screen.visualBounds.height}" fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"  styleClass="game-pane" stylesheets="@game.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.GameController">
+            prefHeight="${screen.visualBounds.height}" fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="game-pane" stylesheets="@GameStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.GameController">
     <fx:define>
         <Screen fx:factory="getPrimary" fx:id="screen"/>
     </fx:define>

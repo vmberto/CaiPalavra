@@ -3,7 +3,7 @@
 }
 
 .new-record {
-	-fx-background-image: url('../resources/sprites/6ob.gif');
+	-fx-background-image: url('../resources/sprites/new-record-confettis.gif');
     -fx-background-size: contain;
 }
 

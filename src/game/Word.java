@@ -23,13 +23,12 @@ public class Word extends Text {
     Word(String text, boolean rotating) {
         super(text);
 
-        setFill(Color.WHITE);
-
         this.wordText = text;
         this.currentWordPosition = 0;
         this.isRotating = rotating;
         this.fallingSpeedBonus = rotating ? 1.8 : 0;
 
+        setFill(Color.WHITE);
         setStyle("-fx-font-size: 35;");
 
         this.scoreValue = calculateWordScore();
@@ -37,7 +36,9 @@ public class Word extends Text {
     }
 
     private int calculateWordScore() {
-        return 10;
+        int score = 10;
+        if (this.isRotating) score += 10;
+        return score;
     }
 
 

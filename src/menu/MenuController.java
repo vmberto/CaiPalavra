@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.media.AudioClip;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,7 +33,7 @@ public class MenuController implements Initializable {
 
     @FXML
     private void startButtonAction(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../game/game.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../game/GameView.fxml"));
         Parent game = loader.load();
 
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();

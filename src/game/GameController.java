@@ -95,7 +95,7 @@ public class GameController implements Initializable {
      * Game Engine
      */
     private void gameInitialized() {
-        gamePane.getScene().setOnKeyTyped(e -> sendKeyboardInputs(e.getCharacter().charAt(0)));
+        gamePane.getScene().setOnKeyTyped(e -> sendKeyboardInputs(e.getCharacter().toLowerCase().charAt(0)));
         createPlayerLives();
         createPlayerScore();
 
@@ -118,13 +118,21 @@ public class GameController implements Initializable {
         score.setSpacing(10.0);
 
         score.getChildren().addAll(new ImageView(pointsIcon), playerScoreDisplay);
-
-        score.setLayoutX(50);
+        score.setLayoutX(-200);
         score.setLayoutY(40);
-
         score.setAlignment(Pos.CENTER);
-
         gamePane.getChildren().add(score);
+
+        AnimationTimer scoreShowUp = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                score.setLayoutX(score.getLayoutX() + 10);
+                if (score.getLayoutX() == 50) {
+                    this.stop();
+                }
+            }
+        };
+        scoreShowUp.start();
     }
 
     /**
@@ -136,12 +144,21 @@ public class GameController implements Initializable {
 
         hearts.getChildren().addAll(new ImageView(heart), new ImageView(heart), new ImageView(heart));
 
-        hearts.setLayoutX(dimensions.getWidth() - 250);
+        hearts.setLayoutX(dimensions.getWidth());
         hearts.setLayoutY(40);
-
         hearts.setAlignment(Pos.CENTER);
-
         gamePane.getChildren().add(hearts);
+
+        AnimationTimer livesShowUp = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                hearts.setLayoutX(hearts.getLayoutX() - 10);
+                if (hearts.getLayoutX() == dimensions.getWidth() - 250) {
+                    this.stop();
+                }
+            }
+        };
+        livesShowUp.start();
 
     }
 
@@ -193,7 +210,7 @@ public class GameController implements Initializable {
         int maxX = (int) dimensions.getWidth() - ((int) dimensions.getWidth() / 4);
         word.setLayoutX(r.nextInt(maxX - minX) + minX);
 
-        word.setLayoutY(-(i * 90));
+        word.setLayoutY(-(i * 100));
     }
 
 
@@ -233,7 +250,6 @@ public class GameController implements Initializable {
             DificultyManager.increaseFallingSpeed(0.23);
             GameStatus.setNextScoreFlag();
         }
-
 
     }
 

@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import score.ScoreRepository;
 import utils.AssetsPath;
 import utils.SoundHandler;
+import utils.Utils;
 import utils.models.PlayerScore;
 
 import java.io.IOException;
@@ -31,19 +32,10 @@ public class GameOverController implements Initializable {
     private BorderPane gameOverPane;
 
     @FXML
-    private VBox verticalBox;
-
-    @FXML
     private TextField playerNameInput;
 
     @FXML
     private PasswordField playerPasswordInput;
-
-    @FXML
-    private Button skipScoreButton;
-
-    @FXML
-    private Button saveScoreButton;
 
     @FXML
     private Text playerScoreDisplay;
@@ -70,6 +62,11 @@ public class GameOverController implements Initializable {
 
         String name = playerNameInput.getText();
         String password = playerPasswordInput.getText();
+
+        if (!Utils.isName(name)) {
+            notificationBox.setText("Digite um nome válido.");
+            return;
+        }
 
         if (name.length() > 0 && password.length() > 0) {
 
@@ -135,8 +132,6 @@ public class GameOverController implements Initializable {
             }
 
         }
-
-
 
         this.playerScoreDisplay.setText(Integer.toString(GameStatus.getPlayerScore()));
 
