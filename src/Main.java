@@ -12,7 +12,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("menu/menu.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/menu/menu.fxml"));
         Parent root = loader.load();
 
         primaryStage.setFullScreen(true);

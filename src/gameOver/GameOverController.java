@@ -107,7 +107,7 @@ public class GameOverController implements Initializable {
 
 
     private void returnToMenu() throws IOException {
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../menu/menu.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/menu/menu.fxml"));
         Parent menu = loader.load();
 
         Stage stage = (Stage) gameOverPane.getScene().getWindow();

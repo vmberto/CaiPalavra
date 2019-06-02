@@ -11,7 +11,7 @@ public class SoundHandler {
     private static boolean isGameSoundDisabled = false;
 
     public static void playMenuSong() {
-        String songPath = SoundHandler.class.getResource(".." + AssetsPath.MENU_SONG).toString();
+        String songPath = SoundHandler.class.getResource(AssetsPath.MENU_SONG).toString();
         menuSong = new AudioClip(songPath);
         menuSong.setCycleCount(AudioClip.INDEFINITE);
         menuSong.setVolume(0.6);
@@ -20,7 +20,7 @@ public class SoundHandler {
 
     public static void playGameSong() {
         if (!isGameSoundDisabled) {
-            String songPath = SoundHandler.class.getResource(".." + AssetsPath.GAME_SONG).toString();
+            String songPath = SoundHandler.class.getResource(AssetsPath.GAME_SONG).toString();
             gameSong = new AudioClip(songPath);
             gameSong.setCycleCount(AudioClip.INDEFINITE);
             gameSong.setVolume(0.6);
@@ -59,7 +59,7 @@ public class SoundHandler {
 
     public static void playSound(String soundPath) {
         if (!isGameSoundDisabled()) {
-            String sp = SoundHandler.class.getResource(".." + soundPath).toString();
+            String sp = SoundHandler.class.getResource(soundPath).toString();
             new AudioClip(sp).play();
         }
 

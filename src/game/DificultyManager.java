@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class DificultyManager {
 
-    private static double fallingSpeed = 3.8;
+    private static double fallingSpeed = 2.8;
 
     public static double getFallingSpeed() {
         return fallingSpeed;
@@ -41,10 +41,8 @@ public class DificultyManager {
             spawnNumber = 2;
         } else if (GameStatus.getPlayerScore() >= 350) {
             spawnNumber = 3;
-        } else if (GameStatus.getPlayerScore() >= 700) {
+        } else if (GameStatus.getPlayerScore() >= 750) {
             spawnNumber = 4;
-        } else if (GameStatus.getPlayerScore() >= 1000) {
-            spawnNumber = 5;
         }
 
         return spawnNumber;

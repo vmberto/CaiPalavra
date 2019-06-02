@@ -38,6 +38,7 @@ public class Word extends Text {
     private int calculateWordScore() {
         int score = 10;
         if (this.isRotating) score += 10;
+        if (this.wordText.length() > 10) score += 5;
         return score;
     }
 

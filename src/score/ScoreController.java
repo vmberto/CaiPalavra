@@ -41,7 +41,7 @@ public class ScoreController implements Initializable {
 
     @FXML
     private void backToMenuAction() throws Exception {
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../menu/menu.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/menu/menu.fxml"));
         Parent menuView = loader.load();
         Stage stage = (Stage) backButton.getScene().getWindow();
         stage.getScene().setRoot(menuView);

@@ -188,7 +188,7 @@ public class GameController implements Initializable {
     private void createWordSpawn() {
         gameSpawn = new Timeline(
                 new KeyFrame(
-                        Duration.seconds(6.2),
+                        Duration.seconds(GameStatus.getPlayerScore() > 500 ? 5.3 : 6.4),
                         event -> {
                             createGameWords(DificultyManager.getWordsSpawnNumber());
                         }
@@ -210,7 +210,7 @@ public class GameController implements Initializable {
         int maxX = (int) dimensions.getWidth() - ((int) dimensions.getWidth() / 4);
         word.setLayoutX(r.nextInt(maxX - minX) + minX);
 
-        word.setLayoutY(-(i * 100));
+        word.setLayoutY(-(i * 110));
     }
 
 
@@ -247,7 +247,7 @@ public class GameController implements Initializable {
         }
 
         if (GameStatus.getPlayerScore() >= GameStatus.getNextScoreFlag()) {
-            DificultyManager.increaseFallingSpeed(0.23);
+            DificultyManager.increaseFallingSpeed(0.25);
             GameStatus.setNextScoreFlag();
         }
 
@@ -330,7 +330,7 @@ public class GameController implements Initializable {
         gameOver.setLayoutY(dimensions.getHeight() + 250);
         gameOver.setLayoutX(dimensions.getWidth() / 2 - 310);
         gamePane.getChildren().add(gameOver);
-        AnimationTimer gameOverShowup = new AnimationTimer() {
+        AnimationTimer gameOverShowUp = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 gameOver.setLayoutY(gameOver.getLayoutY() - 4.9);
@@ -343,7 +343,7 @@ public class GameController implements Initializable {
             try {
                 gameTimer.stop();
                 gameSpawn.stop();
-                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../gameOver/GameOverView.fxml"));
+                FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/gameOver/GameOverView.fxml"));
                 Parent gameOverScreen = loader.load();
                 Stage stage = (Stage) gamePane.getScene().getWindow();
                 stage.getScene().setRoot(gameOverScreen);
@@ -357,7 +357,7 @@ public class GameController implements Initializable {
         });
 
         pause.play();
-        gameOverShowup.start();
+        gameOverShowUp.start();
     }
 
 }

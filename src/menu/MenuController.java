@@ -33,7 +33,7 @@ public class MenuController implements Initializable {
 
     @FXML
     private void startButtonAction(ActionEvent event) throws Exception {
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../game/GameView.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/game/GameView.fxml"));
         Parent game = loader.load();
 
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -47,7 +47,7 @@ public class MenuController implements Initializable {
 
     @FXML
     private void scoreButtonAction(ActionEvent event) throws Exception  {
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../score/score.fxml"));
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/score/score.fxml"));
         Parent scoreView = loader.load();
 
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
