@@ -1,6 +1,6 @@
 # CaiPalavra
 
-## Game Rules:
+### Game Rules:
 
 1. The player must type the words that appear falling in the screen.
 2. Each word gives the player specific score based on its complexity.
