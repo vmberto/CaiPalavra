@@ -1,5 +1,5 @@
 # CaiPalavra
 
-![Game Menu](https://imgur.com/Az2iJb1)
+![Game Menu](https://i.imgur.com/LtxwoLT.png)
 
-![Game](https://imgur.com/D2xCwwH)
+![Game](https://i.imgur.com/zo6sXIr.png)
