@@ -1,5 +1,7 @@
 # CaiPalavra
 
+**Developed for Programming Practices Discipline using JAVAFX**
+
 ### Game Rules:
 
 1. The player must type the words that appear falling in the screen.
