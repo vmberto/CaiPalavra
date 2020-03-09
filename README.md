@@ -1,6 +1,6 @@
 # CaiPalavra
 
-**Developed for Programming Practices Discipline using JAVAFX**
+**Developed for Programming Practices Subject using JAVAFX**
 
 ### Game Rules:
 
